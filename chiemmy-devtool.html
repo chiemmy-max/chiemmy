@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Chiemmy DevTool</title>
+
+<style>
+* { box-sizing: border-box; font-family: Arial; }
+
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 10px;
+}
+
+.light { background: #f1f5f9; color: #0f172a; }
+
+h1 { text-align: center; }
+
+.top { text-align: center; margin: 10px 0; }
+
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  margin-top: 5px;
+}
+
+button {
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+#result {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 10px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.light .card { background: #fff; }
+
+.title {
+  grid-column: 1/-1;
+  text-align: center;
+  font-weight: bold;
+}
+
+.desc {
+  font-size: 12px;
+  color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<h1 contenteditable="false">Chiemmy DevTool 🚀</h1>
+
+<div class="top">
+  <input id="search" list="prop" placeholder="Try: alert, document, onblur">
+  <button onclick="showProp()">Search</button>
+  <button onclick="toggleMode()">🌙/☀️</button>
+</div>
+
+<datalist id="prop"></datalist>
+
+<div id="result"></div>
+
+<script>
+
+// 🌙 Toggle
+function toggleMode(){
+  document.body.classList.toggle("light");
+}
+
+// 🔥 Auto list
+window.onload = function () {
+  let datalist = document.getElementById("prop");
+  let sources = [window, document, navigator, screen];
+  let props = new Set();
+
+  sources.forEach(obj=>{
+    for(let p in obj) props.add(p);
+  });
+
+  Array.from(props).sort().forEach(p=>{
+    let op = document.createElement("option");
+    op.value = p;
+    datalist.appendChild(op);
+  });
+};
+
+// 🚀 SEARCH
+function showProp(){
+  let value = search.value.trim();
+  let result = document.getElementById("result");
+  result.innerHTML = "";
+
+  let sources = [window, document, navigator, screen];
+  let found = false;
+
+  for (let obj of sources){
+    if (value in obj){
+      let el = obj[value];
+      found = true;
+
+      if (typeof el === "object" && el !== null){
+        result.innerHTML = `<div class="title">Properties of "${value}"</div>`;
+
+        let props = [];
+        for (let p in el) props.push(p);
+        props.sort();
+
+        props.forEach(p=>{
+          addCard(result, p, el[p]);
+        });
+
+      } else {
+        result.innerHTML = `<div class="title">"${value}"</div>`;
+        addCard(result, value, el);
+      }
+
+      break;
+    }
+  }
+
+  if (!found){
+    result.innerHTML = `<div class="title">❌ Not found</div>`;
+  }
+}
+
+// 🧱 Card
+function addCard(container, name, value){
+  let type = typeof value;
+
+  let val;
+  try {
+    val = (type === "object") ? "[object]" : value;
+  } catch {
+    val = "[restricted]";
+  }
+
+  let card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <b>${name}</b><br>
+    <small>${type}</small><br>
+    ${val}<br>
+    <div class="desc" id="desc-${name}">Loading description...</div>
+    ${type === 'function' ? `
+      <input placeholder="Enter arguments (comma separated)" id="arg-${name}">
+      <button onclick="runFunc('${name}')">Run ▶</button>
+    ` : ""}
+  `;
+
+  container.appendChild(card);
+
+  // 📖 Fetch MDN description
+  fetchMDN(name);
+}
+
+// 📖 Fetch MDN
+function fetchMDN(name) {
+  let el = document.getElementById("desc-" + name);
+  
+  el.innerHTML = `
+    📖 <a href="https://developer.mozilla.org/en-US/search?q=${name}" target="_blank">
+    View on MDN
+    </a>
+  `;
+}
+
+// 🧪 Run function with arguments
+function runFunc(name){
+  try {
+    let argsInput = document.getElementById("arg-"+name).value;
+    let args = argsInput ? argsInput.split(",") : [];
+
+    let fn = window[name];
+
+    if (typeof fn === "function"){
+      let result = fn(...args);
+      alert("Result: " + result);
+    } else {
+      alert("Not a function ❌");
+    }
+
+  } catch (e){
+    alert("Error: " + e.message);
+  }
+}
+
+// ⌨️ Enter
+search.addEventListener("keypress", e=>{
+  if (e.key === "Enter") showProp();
+});
+
+</script>
+
+</body>
+</html>
