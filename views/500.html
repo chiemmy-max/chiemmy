@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry - Server Err</title>
+    <style>
+        body {
+            margin: 0 40%;
+            background: #494946;
+            color: white;
+            width: 600px;
+        }
+        h1 {
+            padding-left: 30px;
+            color: yellow;
+            letter-spacing: 2px;
+            font-size: 45px;
+        }
+        p {
+            color: yellow;
+        }
+        button {
+            padding-left: 5px;
+        }
+        span {
+            padding: 3px;
+        }
+        #textarea {
+            width: 300px;
+            height: 150px;
+        }
+        div {
+            margin-top: 3rem;
+            display: none;
+            transition: all 0.3s ease
+        }
+        [type='submit'], button {
+            background: darkblue;
+            color: yellow;
+            border: none;
+            border-radius: 5px;
+            width: 90px;
+            height: 35px;
+        }
+        [type='submit']:hover {
+            background-color: blue;
+            transition: 0.4s;
+            transform: scale(1.01);
+            cursor:pointer;
+        }
+        button:hover {
+            background-color: blue;
+            transition: 0.4s;
+            transform: scale(1.01);
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server error</h1>
+    <p>We'll fix that later</p>
+    <span>Would you like to send us a report <button onclick="report()">Yes</button></span>
+    
+
+    <div id="div">
+        <form action="mailto:emmanuelubochi109@gmail.com" method="POST">
+            <span>Email:</span><input type="email" name="email" id="email"><br><br>
+            <span>Report</span><br>
+            <textarea name="report" id="textarea" placeholder="Report here"></textarea><br><br>
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
+
+    <script>
+        function report() {
+            document.getElementById('div').style.display = 'block';
+            document.getElementById('div').style.transition = '0.5s'
+        }
+    </script>
+</body>
+</html>

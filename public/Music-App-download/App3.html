@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppVault - Download Apps & Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .app-card { transition: all 0.3s ease; }
+        .app-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .bottom-nav { box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-white text-2xl">📱</div>
+                <h1 class="text-3xl font-bold tracking-tighter">AppVault</h1>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#" class="hover:text-emerald-500">Home</a>
+                <a href="#" class="hover:text-emerald-500">Categories</a>
+                <a href="#" class="hover:text-emerald-500">Top Charts</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="showToast('Profile coming soon!')" class="w-9 h-9 flex items-center justify-center hover:bg-gray-100 rounded-2xl"><i class="fa-solid fa-user text-xl"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
+        <!-- SEARCH BAR -->
+        <div class="relative mb-8">
+            <input id="search-input" type="text" placeholder="Search apps & games (e.g. WhatsApp, PUBG)..." 
+                   onkeyup="filterApps()" class="w-full bg-white border border-gray-200 focus:border-emerald-500 rounded-3xl px-8 py-5 text-lg outline-none shadow-sm">
+            <i class="fa-solid fa-magnifying-glass absolute right-7 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="mb-8">
+            <h2 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <span>Categories</span>
+                <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">LIVE FROM DUMMYJSON API</span>
+            </h2>
+            <div id="category-pills" class="flex gap-3 overflow-x-auto pb-4"></div>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div id="loading" class="hidden flex flex-col items-center justify-center py-20">
+            <i class="fa-solid fa-spinner fa-spin text-6xl text-emerald-500"></i>
+            <p class="mt-6 text-gray-500">Fetching real apps from API...</p>
+        </div>
+
+        <!-- APPS GRID -->
+        <div id="apps-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t md:hidden">
+        <div class="max-w-7xl mx-auto flex justify-around py-3 text-xs">
+            <div onclick="window.scrollTo(0,0)" class="flex flex-col items-center text-emerald-500">
+                <i class="fa-solid fa-home text-2xl"></i>
+                <span>Home</span>
+            </div>
+            <div onclick="showToast('Downloads page coming soon')" class="flex flex-col items-center text-gray-500">
+                <i class="fa-solid fa-download text-2xl"></i>
+                <span>Downloads</span>
+            </div>
+            <div onclick="document.getElementById('search-input').focus()" class="flex flex-col items-center text-gray-500">
+                <i class="fa-solid fa-search text-2xl"></i>
+                <span>Search</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-emerald-600 text-white px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-3 z-50">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        let allApps = [];
+        let currentCategory = 'All';
+
+        // ================== FETCH REAL API DATA ==================
+        async function fetchApps() {
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('apps-grid').classList.add('hidden');
+
+            try {
+                // Real public API - no key needed, CORS friendly
+                const res = await fetch('https://dummyjson.com/products?limit=30');
+                const data = await res.json();
+                
+                // Map dummy products → realistic apps
+                allApps = data.products.map(p => ({
+                    id: p.id,
+                    name: p.title,
+                    category: p.category.charAt(0).toUpperCase() + p.category.slice(1),
+                    icon: p.thumbnail,
+                    description: p.description.substring(0, 85) + "...",
+                    downloads: Math.floor(Math.random() * 8000 + 1000) + "K+",
+                    rating: p.rating.toFixed(1),
+                    price: p.price < 50 ? "Free" : "$" + p.price
+                }));
+
+                renderCategoryPills();
+                renderApps(allApps);
+            } catch (e) {
+                showToast("API error – using demo data");
+                // Fallback demo data
+                allApps = [
+                    {id:1,name:"WhatsApp",category:"Social",icon:"https://picsum.photos/id/101/200/200",description:"Instant messaging & calls",downloads:"5B+",rating:"4.8",price:"Free"},
+                    {id:2,name:"PUBG Mobile",category:"Games",icon:"https://picsum.photos/id/201/200/200",description:"Battle Royale action",downloads:"1B+",rating:"4.5",price:"Free"}
+                ];
+                renderCategoryPills();
+                renderApps(allApps);
+            }
+        }
+
+        // ================== RENDER ==================
+        function renderCategoryPills() {
+            const categories = ['All', ...new Set(allApps.map(a => a.category))];
+            const container = document.getElementById('category-pills');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="filterByCategory('${cat}')" 
+                        class="category-btn px-7 py-2.5 rounded-3xl text-sm font-medium whitespace-nowrap transition-all ${cat === currentCategory ? 'bg-emerald-500 text-white shadow-md' : 'bg-white shadow-sm hover:bg-gray-100'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function renderApps(appsToShow) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('apps-grid').classList.remove('hidden');
+
+            const grid = document.getElementById('apps-grid');
+            grid.innerHTML = '';
+
+            appsToShow.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card bg-white rounded-3xl overflow-hidden border border-gray-100';
+                card.innerHTML = `
+                    <div class="p-5">
+                        <div class="flex gap-4">
+                            <img src="${app.icon}" class="w-16 h-16 rounded-2xl object-cover shadow-sm">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-lg leading-tight line-clamp-2">${app.name}</h3>
+                                <p class="text-xs text-gray-500 mt-1">${app.category}</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm text-gray-600 mt-5 line-clamp-3">${app.description}</p>
+                        
+                        <div class="flex justify-between items-center mt-6 text-sm">
+                            <div class="flex items-center gap-1 text-amber-500">
+                                ★ <span class="text-gray-700">${app.rating}</span>
+                            </div>
+                            <div class="text-gray-500">${app.downloads}</div>
+                        </div>
+                        
+                        <button onclick="downloadApp('${app.name}')" 
+                                class="mt-5 w-full bg-gradient-to-r from-emerald-500 to-teal-400 text-white py-3.5 rounded-2xl font-semibold hover:brightness-105 transition">
+                            ${app.price === "Free" ? "Download Free" : "Buy Now"}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ================== FILTERS ==================
+        function filterApps() {
+            const term = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            const filtered = allApps.filter(app => 
+                (currentCategory === 'All' || app.category === currentCategory) &&
+                (app.name.toLowerCase().includes(term) || 
+                 app.description.toLowerCase().includes(term))
+            );
+            
+            renderApps(filtered);
+        }
+
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            renderCategoryPills();   // update active pill
+            filterApps();
+        }
+
+        // ================== DOWNLOAD ==================
+        function downloadApp(name) {
+            showToast(`✅ Downloading ${name}... (Real API demo)`);
+            // In a real app you would link to actual APK/IPA here
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerHTML = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // ================== INIT ==================
+        window.onload = () => {
+            fetchApps();
+            showToast("🎉 Real API connected! Data from dummyjson.com");
+        };
+    </script>
+</body>
+</html>

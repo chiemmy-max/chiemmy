@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="icon" href="../assets/logo.png">
+    <title>Image || Chiemmy</title>
+
+    <style>
+        :root {
+            --offwhite: #F8FAFC;
+            --primary-color: darkblue;
+            --secondary-color: gold;
+        }
+        body {
+            background-color: var(--offwhite);
+        }
+        #header {
+            margin-top: 12em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        #header > center > h1 {
+            color: blue;
+        }
+        #header > div {
+            display: flex;
+            justify-content: center;
+            padding: 8px;
+            gap: 15px;
+        }
+        #search {
+            width: 320px;
+            padding: 12px 16px;
+            
+            transform: scale(1.0);
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            border-color: blue;
+        }
+        #search:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.4);
+        }
+        #search:hover {
+            transform: scale(1.01);
+            transition: all 0.3s ease;
+            border-color: blue;
+        }
+        button {
+            border: none;
+            width: 150px;
+            border-radius: 6px;
+            color: blue;
+            font-weight: 500;
+            margin: 5px 0;
+            background-color: gold;
+            height:fit-content;
+            padding: 8px;
+            transform: scale(1);
+            transition: all 0.3s ease
+        }
+        button:hover {
+            transform: scale(1.1);
+            transition: all 0.3s ease;
+            border:none;
+        }
+        button:active {
+            border:none;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+        /* Google-style bouncing dots loader */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            padding: 70px 20px;
+            margin: 30px 0;
+        }
+        .loader div {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            animation: googleBounce 1.4s infinite ease-in-out both;
+        }
+        /* Google Colors */
+        .loader div:nth-child(1) { background: #4285F4; animation-delay: -0.32s; } /* Blue */
+        .loader div:nth-child(2) { background: #EA4335; animation-delay: -0.16s; } /* Red */
+        .loader div:nth-child(3) { background: #FBBC05; } /* Yellow */
+        .loader div:nth-child(4) { background: #34A853; animation-delay: 0.16s; } /* Green */
+
+
+        @keyframes googleBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        /* Google Image-style responsive gallery */
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        #gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.25s ease;
+        }
+
+        #gallery img:hover {
+            transform: scale(1.04);
+        }
+        [alt="Emmanuel"] {
+            border-radius: 50%;
+            position: sticky;
+            top: 10px;
+            left: 10px;
+            height: 70px;
+            width: 70px;
+        }
+        svg {
+            height: 1.5em !important;
+            padding-right: 8px;
+            padding-top: 4px !important;
+        }
+        button {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+    </style>
+</head>
+<body>
+    <img alt="Emmanuel" src="../assets/me.jpg">
+    <div id="header">
+        <center><h1>Search For Any Image</h1></center><br>
+    <div><input type="text" id="search" placeholder="Any image">
+        <button onclick="searchImage()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+</svg>
+
+            Search </button>
+    </div>
+</div>
+
+<div id="loader" class="loader hidden">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<div id="gallery"></div>
+    <script>
+        async function searchImage() {
+            const query = document.getElementById('search').value.trim();
+
+            if(!query) {
+                alert('Please enter something to search!')
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            const gallery = document.getElementById('gallery');
+
+            loader.classList.remove('hidden');
+            gallery.innerHTML = '';
+
+            try {
+                const res = await fetch(`https://api.unsplash.com/search/photos?query=${query}&page=7&per_page=30&client_id=-Cod3TpkznSq23LDKep_pO_LKj_cwYt0dLeSQ2vcV6I`);
+                const data = await res.json();
+
+                // Hide loader
+                loader.classList.add('hidden');
+                if (data.results.length === 0) {
+                    gallery.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding:60px; color: #777; font-size: 18px;">
+                        No Images Found for "${query}". Try another search! </p>`;
+                        return;
+                }
+                // Render Images
+                data.results.forEach(photo => {
+                const img = document.createElement('img');
+
+                img.src = photo.urls.small;
+                img.alt = photo.alt_description || query;
+                img.loading = 'lazy';
+
+                //img.style.width = '200px';
+                //img.style.margin = "10px";
+
+                gallery.appendChild(img);
+            });
+
+            } catch (error) {
+                loader.classList.add('hidden');
+                gallery.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 60px; color:red;">
+                    Oops! Something went wrong. Check your internet.
+                    </p>`;
+                    console.error(error)
+            }
+        }
+
+        const search = document.getElementById('search');
+
+        search.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                searchImage();
+            }
+        })
+
+        // -Cod3TpkznSq23LDKep_pO_LKj_cwYt0dLeSQ2vcV6I
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppVault - Download Apps & Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .app-card { transition: all 0.3s ease; }
+        .app-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .bottom-nav { box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-mobile-alt text-3xl text-emerald-500"></i>
+                <h1 class="text-2xl font-bold">AppVault</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="text-gray-600 hover:text-emerald-500"><i class="fa-solid fa-search text-xl"></i></button>
+                <button class="text-gray-600 hover:text-emerald-500"><i class="fa-solid fa-user text-xl"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 py-6 w-full">
+        <!-- SEARCH BAR -->
+        <div class="relative mb-6">
+            <input id="search-input" type="text" placeholder="Search apps & games..." 
+                   onkeyup="filterApps()" class="w-full bg-white border border-gray-300 rounded-full px-6 py-4 text-lg focus:outline-none focus:border-emerald-500 shadow-sm">
+            <i class="fa-solid fa-search absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Categories</h2>
+            <div class="flex gap-4 overflow-x-auto pb-2">
+                <button onclick="filterByCategory('All')" class="px-6 py-2 bg-emerald-100 text-emerald-700 rounded-full font-medium hover:bg-emerald-200">All</button>
+                <button onclick="filterByCategory('Productivity')" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Productivity</button>
+                <button onclick="filterByCategory('Games')" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Games</button>
+                <button onclick="filterByCategory('Social')" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Social</button>
+                <button onclick="filterByCategory('Tools')" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200">Tools</button>
+            </div>
+        </div>
+
+        <!-- FEATURED APPS -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4">Featured Apps</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="apps-grid"></div>
+        </div>
+    </main>
+
+    <!-- BOTTOM NAV (MOBILE) -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden">
+        <div class="flex justify-around py-3">
+            <button class="flex flex-col items-center text-gray-600 hover:text-emerald-500">
+                <i class="fa-solid fa-home text-xl"></i>
+                <span class="text-xs">Home</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-600 hover:text-emerald-500">
+                <i class="fa-solid fa-download text-xl"></i>
+                <span class="text-xs">Downloads</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-600 hover:text-emerald-500">
+                <i class="fa-solid fa-search text-xl"></i>
+                <span class="text-xs">Search</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-600 hover:text-emerald-500">
+                <i class="fa-solid fa-user text-xl"></i>
+                <span class="text-xs">Profile</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // APP DATA
+        const apps = [
+            {
+                name: "Productivity Pro",
+                category: "Productivity",
+                icon: "https://picsum.photos/id/40/200/200",
+                description: "Boost your daily tasks with AI-powered tools.",
+                downloads: "1M+",
+                rating: "4.8",
+                apk: "https://example.com/fake-apk1.apk"
+            },
+            {
+                name: "Epic Runner",
+                category: "Games",
+                icon: "https://picsum.photos/id/50/200/200",
+                description: "Endless running adventure with stunning graphics.",
+                downloads: "5M+",
+                rating: "4.5",
+                apk: "https://example.com/fake-apk2.apk"
+            },
+            {
+                name: "Social Connect",
+                category: "Social",
+                icon: "https://picsum.photos/id/60/200/200",
+                description: "Stay connected with friends and family.",
+                downloads: "10M+",
+                rating: "4.7",
+                apk: "https://example.com/fake-apk3.apk"
+            },
+            {
+                name: "Utility Master",
+                category: "Tools",
+                icon: "https://picsum.photos/id/70/200/200",
+                description: "All-in-one toolkit for your device.",
+                downloads: "2M+",
+                rating: "4.6",
+                apk: "https://example.com/fake-apk4.apk"
+            },
+            {
+                name: "Puzzle Quest",
+                category: "Games",
+                icon: "https://picsum.photos/id/80/200/200",
+                description: "Challenging puzzles to sharpen your mind.",
+                downloads: "3M+",
+                rating: "4.4",
+                apk: "https://example.com/fake-apk5.apk"
+            },
+            {
+                name: "Note Keeper",
+                category: "Productivity",
+                icon: "https://picsum.photos/id/90/200/200",
+                description: "Simple and secure note-taking app.",
+                downloads: "500K+",
+                rating: "4.9",
+                apk: "https://example.com/fake-apk6.apk"
+            },
+            // Add more apps as needed
+        ];
+
+        let currentCategory = 'All';
+
+        // RENDER APPS
+        function renderApps(filteredApps) {
+            const grid = document.getElementById('apps-grid');
+            grid.innerHTML = '';
+            filteredApps.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card bg-white rounded-2xl overflow-hidden shadow-md';
+                card.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex items-center gap-4 mb-4">
+                            <img src="${app.icon}" class="w-16 h-16 rounded-xl object-cover">
+                            <div>
+                                <h3 class="font-semibold text-lg">${app.name}</h3>
+                                <div class="text-sm text-gray-500">${app.category}</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">${app.description}</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-1 text-yellow-400">
+                                <i class="fa-solid fa-star"></i>
+                                <span>${app.rating}</span>
+                            </div>
+                            <span class="text-sm text-gray-500">${app.downloads}</span>
+                        </div>
+                        <button onclick="downloadApp('${app.apk}', '${app.name}')" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-medium hover:bg-emerald-600 transition">
+                            Download
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // FILTER BY SEARCH
+        function filterApps() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            let filtered = apps.filter(app => 
+                (currentCategory === 'All' || app.category === currentCategory) &&
+                (app.name.toLowerCase().includes(query) || app.description.toLowerCase().includes(query))
+            );
+            renderApps(filtered);
+        }
+
+        // FILTER BY CATEGORY
+        function filterByCategory(category) {
+            currentCategory = category;
+            filterApps();
+        }
+
+        // SIMULATE DOWNLOAD
+        function downloadApp(url, name) {
+            // In real app, this would trigger download
+            alert(`Downloading ${name}... (Demo mode - real APK would download here)`);
+            // window.open(url, '_blank'); // Uncomment for actual link
+        }
+
+        // INIT
+        renderApps(apps);
+    </script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Honor Travels • Discover the World with Honor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="../assets/logo.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
+    .hero-bg {
+      background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1506929562872-bb421503ef21');
+      background-size: cover;
+      background-position: center;
+    }
+    .nav-link {
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #d4af37;
+      transform: translateY(-2px);
+    }
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+    }
+    .gold-btn {
+      background: linear-gradient(90deg, #d4af37, #f1d38a);
+      transition: all 0.3s;
+    }
+    .gold-btn:hover {
+      background: linear-gradient(90deg, #f1d38a, #d4af37);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white font-['Inter']">
+  <!-- NAVBAR -->
+  <nav class="bg-zinc-900/95 backdrop-blur-md fixed w-full z-50 border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <i class="fa-solid fa-plane text-3xl text-amber-400"></i>
+        <span class="text-3xl font-bold tracking-tighter text-white">Honor Travels</span>
+      </div>
+      
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="#" class="nav-link text-zinc-300 hover:text-amber-400">Destinations</a>
+        <a href="#" class="nav-link text-zinc-300 hover:text-amber-400">Packages</a>
+        <a href="#" class="nav-link text-zinc-300 hover:text-amber-400">Experiences</a>
+        <a href="#" class="nav-link text-zinc-300 hover:text-amber-400">Blog</a>
+        <a href="#" class="nav-link text-zinc-300 hover:text-amber-400">About</a>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button onclick="document.getElementById('search-modal').classList.remove('hidden')" 
+                class="px-6 py-2.5 text-sm font-semibold border border-amber-400 text-amber-400 rounded-full hover:bg-amber-400 hover:text-zinc-900 transition">
+          Search Trips
+        </button>
+        <button class="gold-btn text-zinc-900 px-8 py-3 rounded-full font-semibold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-phone"></i>
+          "+2347058385536"
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero-bg h-screen flex items-center pt-20">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="max-w-3xl mx-auto">
+        <h1 class="text-7xl md:text-8xl font-bold font-['Playfair_Display'] leading-none tracking-tighter mb-6">
+          HONOR YOUR<br>JOURNEY
+        </h1>
+        <p class="text-2xl text-zinc-200 mb-10">Curated luxury experiences across Nigeria and the world. From Lagos to paradise and back.</p>
+        
+        <!-- SEARCH BAR -->
+        <div class="bg-white/10 backdrop-blur-xl p-2 rounded-3xl border border-white/20 max-w-2xl mx-auto">
+          <div class="bg-zinc-900 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs text-amber-400 mb-1">WHERE TO?</label>
+              <select id="destination" class="w-full bg-transparent text-lg focus:outline-none">
+                <option>Lagos • Nigeria</option>
+                <option>Dubai • UAE</option>
+                <option>Paris • France</option>
+                <option>Calabar • Nigeria</option>
+                <option>Santorini • Greece</option>
+                <option>Cape Town • South Africa</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-amber-400 mb-1">WHEN?</label>
+              <input type="text" value="March 15 – 25, 2026" class="w-full bg-transparent text-lg focus:outline-none">
+            </div>
+            <div class="flex items-end">
+              <button onclick="alert('🎉 Great choice! Our travel experts will contact you shortly.')"
+                      class="gold-btn w-full py-5 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3">
+                FIND TRIPS
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-12 flex justify-center gap-8 text-sm">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-amber-400"></i>
+            <span>Fully Protected</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-plane-departure text-amber-400"></i>
+            <span>Private Jets &amp; Charters</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-star text-amber-400"></i>
+            <span>5-Star Only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- DESTINATIONS -->
+  <section class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <span class="text-amber-400 text-sm font-semibold tracking-widest">EXPLORE</span>
+          <h2 class="text-5xl font-bold font-['Playfair_Display']">Featured Destinations</h2>
+        </div>
+        <a href="#" class="text-amber-400 flex items-center gap-2 hover:gap-4 transition">View all destinations <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <!-- Card 1 -->
+        <div class="card-hover group relative overflow-hidden rounded-3xl">
+          <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9" class="w-full h-80 object-cover" alt="Lagos">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <div class="text-amber-400 text-xs">NIGERIA</div>
+            <h3 class="text-3xl font-bold">Lagos • Victoria Island</h3>
+            <p class="text-sm text-zinc-300">City of lights &amp; endless energy</p>
+          </div>
+          <div class="absolute top-6 right-6 bg-black/70 px-4 py-1 rounded-full text-xs font-medium">From ₦185,000</div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card-hover group relative overflow-hidden rounded-3xl">
+          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" class="w-full h-80 object-cover" alt="Obudu">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <div class="text-amber-400 text-xs">NIGERIA</div>
+            <h3 class="text-3xl font-bold">Obudu Mountain Resort</h3>
+            <p class="text-sm text-zinc-300">Africa's Switzerland</p>
+          </div>
+          <div class="absolute top-6 right-6 bg-black/70 px-4 py-1 rounded-full text-xs font-medium">From ₦320,000</div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card-hover group relative overflow-hidden rounded-3xl">
+          <img src="https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3" class="w-full h-80 object-cover" alt="Calabar">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <div class="text-amber-400 text-xs">NIGERIA</div>
+            <h3 class="text-3xl font-bold">Calabar Carnival</h3>
+            <p class="text-sm text-zinc-300">The biggest street party on earth</p>
+          </div>
+          <div class="absolute top-6 right-6 bg-black/70 px-4 py-1 rounded-full text-xs font-medium">Dec 2026</div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card-hover group relative overflow-hidden rounded-3xl">
+          <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09" class="w-full h-80 object-cover" alt="Dubai">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <div class="text-amber-400 text-xs">UAE</div>
+            <h3 class="text-3xl font-bold">Dubai Luxury Escape</h3>
+            <p class="text-sm text-zinc-300">Burj Al Arab + desert safari</p>
+          </div>
+          <div class="absolute top-6 right-6 bg-black/70 px-4 py-1 rounded-full text-xs font-medium">$3,299</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section class="py-24 bg-black">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-bold font-['Playfair_Display'] text-center mb-4">Best Selling Journeys</h2>
+      <p class="text-center text-zinc-400 mb-16">Handpicked by our Lagos-based travel curators</p>
+
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="bg-zinc-900 rounded-3xl overflow-hidden card-hover">
+          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4" class="w-full h-56 object-cover">
+          <div class="p-8">
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <h3 class="font-semibold text-2xl">Yankari Safari Escape</h3>
+                <p class="text-amber-400 text-sm">4 Days • Bauchi, Nigeria</p>
+              </div>
+              <div class="text-right">
+                <span class="text-3xl font-bold">₦495k</span>
+                <span class="block text-xs text-zinc-500">per person</span>
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm mb-8">
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Game drives in Yankari National Park</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Private lodge stay</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Airport transfers from Lagos</li>
+            </ul>
+            <button onclick="alert('Booking request sent! Our team will call you within 30 minutes.')"
+                    class="w-full py-4 bg-amber-400 hover:bg-amber-500 transition text-zinc-950 font-semibold rounded-2xl">Book This Journey</button>
+          </div>
+        </div>
+
+        <div class="bg-zinc-900 rounded-3xl overflow-hidden card-hover border-2 border-amber-400 relative">
+          <div class="absolute top-6 right-6 bg-amber-400 text-zinc-900 text-xs font-bold px-5 py-1 rounded-full">MOST POPULAR</div>
+          <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be" class="w-full h-56 object-cover">
+          <div class="p-8">
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <h3 class="font-semibold text-2xl">Dubai 5-Star Getaway</h3>
+                <p class="text-amber-400 text-sm">7 Days • Dubai, UAE</p>
+              </div>
+              <div class="text-right">
+                <span class="text-3xl font-bold">$4,199</span>
+                <span class="block text-xs text-zinc-500">all inclusive</span>
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm mb-8">
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Burj Khalifa &amp; Atlantis The Royal</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Private desert dinner</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Business class flights from Lagos</li>
+            </ul>
+            <button onclick="alert('🎉 Your Dubai trip is almost booked!')"
+                    class="w-full py-4 bg-amber-400 hover:bg-amber-500 transition text-zinc-950 font-semibold rounded-2xl">Reserve Now</button>
+          </div>
+        </div>
+
+        <div class="bg-zinc-900 rounded-3xl overflow-hidden card-hover">
+          <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2" class="w-full h-56 object-cover">
+          <div class="p-8">
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <h3 class="font-semibold text-2xl">Santorini Honeymoon</h3>
+                <p class="text-amber-400 text-sm">10 Days • Greece</p>
+              </div>
+              <div class="text-right">
+                <span class="text-3xl font-bold">$6,850</span>
+                <span class="block text-xs text-zinc-500">per couple</span>
+              </div>
+            </div>
+            <ul class="space-y-3 text-sm mb-8">
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Cliff-side villa with private pool</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> Sunset catamaran cruise</li>
+              <li class="flex items-center gap-3"><i class="fa-solid fa-check text-emerald-400"></i> All transfers &amp; airport lounge</li>
+            </ul>
+            <button onclick="alert('Romantic Santorini package added to wishlist 💕')"
+                    class="w-full py-4 bg-amber-400 hover:bg-amber-500 transition text-zinc-950 font-semibold rounded-2xl">Book Honeymoon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY HONOR -->
+  <section class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-amber-400 uppercase tracking-widest text-sm">WHY TRAVELERS CHOOSE US</span>
+          <h2 class="text-5xl font-bold font-['Playfair_Display'] mt-3 leading-none">Travel with absolute peace of mind</h2>
+          <div class="mt-12 space-y-12">
+            <div class="flex gap-6">
+              <div class="w-12 h-12 bg-amber-400/10 text-amber-400 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0">🛡️</div>
+              <div>
+                <h4 class="font-semibold text-xl mb-1">24/7 Lagos Support</h4>
+                <p class="text-zinc-400">Local team always ready. Speak to a real human in minutes.</p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <div class="w-12 h-12 bg-amber-400/10 text-amber-400 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0">✈️</div>
+              <div>
+                <h4 class="font-semibold text-xl mb-1">Private &amp; Exclusive</h4>
+                <p class="text-zinc-400">From private jets to hidden villas — we create once-in-a-lifetime moments.</p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <div class="w-12 h-12 bg-amber-400/10 text-amber-400 flex items-center justify-center rounded-2xl text-3xl flex-shrink-0">🌍</div>
+              <div>
+                <h4 class="font-semibold text-xl mb-1">Carbon Negative</h4>
+                <p class="text-zinc-400">Every trip plants 100 trees. We travel responsibly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1523906834658-6e24ef7e38f9" class="rounded-3xl shadow-2xl" alt="Happy travelers">
+          <div class="absolute -bottom-6 -left-6 bg-zinc-900 p-8 rounded-3xl border border-amber-400/30">
+            <div class="flex items-center gap-4">
+              <div class="text-6xl">4.98</div>
+              <div>
+                <div class="text-amber-400">★★★★★</div>
+                <div class="text-sm text-zinc-400">from 1,284 happy travelers</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="py-24 bg-black">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-5xl font-bold font-['Playfair_Display'] mb-16">"The most unforgettable trip of our lives"</h2>
+      
+      <div class="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div class="bg-zinc-900 p-8 rounded-3xl text-left">
+          <div class="flex gap-1 text-amber-400 mb-6">★★★★★</div>
+          <p class="italic text-lg">"Honor Travels made our Lagos to Santorini honeymoon magical. Everything was perfect — even the private yacht dinner!"</p>
+          <div class="mt-8 flex items-center gap-4">
+            <img src="https://i.pravatar.cc/64?u=1" class="w-12 h-12 rounded-full" alt="">
+            <div>
+              <div class="font-medium">Dr. Adebayo &amp; Funke Williams</div>
+              <div class="text-xs text-zinc-400">Lekki, Lagos • Feb 2026</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-zinc-900 p-8 rounded-3xl text-left">
+          <div class="flex gap-1 text-amber-400 mb-6">★★★★★</div>
+          <p class="italic text-lg">"Took my family to Obudu Mountains. The service was so personal. We felt like royalty the entire time."</p>
+          <div class="mt-8 flex items-center gap-4">
+            <img src="https://i.pravatar.cc/64?u=2" class="w-12 h-12 rounded-full" alt="">
+            <div>
+              <div class="font-medium">Mr. Chukwudi Okoro</div>
+              <div class="text-xs text-zinc-400">Abuja • Jan 2026</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-zinc-900 p-8 rounded-3xl text-left">
+          <div class="flex gap-1 text-amber-400 mb-6">★★★★★</div>
+          <p class="italic text-lg">"Dubai trip was flawless. They even arranged a surprise proposal for my girlfriend at Burj Al Arab!"</p>
+          <div class="mt-8 flex items-center gap-4">
+            <img src="https://i.pravatar.cc/64?u=3" class="w-12 h-12 rounded-full" alt="">
+            <div>
+              <div class="font-medium">Emmanuel Okafor</div>
+              <div class="text-xs text-zinc-400">Ikeja, Lagos • March 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="py-28 bg-gradient-to-br from-amber-400 to-yellow-500 text-zinc-900">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h2 class="text-6xl font-bold font-['Playfair_Display'] mb-6">Ready to create memories that last forever?</h2>
+      <p class="text-2xl mb-12">Our travel experts in Lagos are waiting to design your perfect journey.</p>
+      <button onclick="alert('📞 +234 705 838 5536 — We just called you! Or WhatsApp us now.')"
+              class="gold-btn text-2xl px-16 py-8 rounded-3xl font-semibold shadow-2xl shadow-black/50">
+        LET'S PLAN YOUR TRIP →
+      </button>
+      <p class="mt-6 text-sm">Or call/WhatsApp <span class="font-semibold">+234 705 838 5536</span></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-black py-20 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+      <div>
+        <div class="flex items-center gap-3 text-3xl font-bold mb-6">
+          <i class="fa-solid fa-plane text-amber-400"></i>
+          Honor Travels
+        </div>
+        <p class="text-zinc-400 text-sm">Premium travel experiences since 2018.<br>Lagos • Abuja • Port Harcourt</p>
+      </div>
+     

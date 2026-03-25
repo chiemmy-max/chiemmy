@@ -1,0 +1,10 @@
+:root {
+    --offwhite: #F8FAFC;
+    --primary-color: darkblue;
+    --accent: gold;
+}
+body {
+    background: blue;
+    color: var(--primary-color);
+    margin: 29%
+}

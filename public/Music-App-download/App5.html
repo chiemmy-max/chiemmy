@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppVault - Download Apps & Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .app-card { transition: all 0.3s ease; }
+        .app-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-white text-2xl">📱</div>
+                <h1 class="text-3xl font-bold tracking-tighter">AppVault</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
+        <!-- SEARCH BAR -->
+        <div class="relative mb-8">
+            <input id="search-input" type="text" placeholder="Search apps & games (e.g. Facebook, WhatsApp, PUBG)..." 
+                   onkeyup="handleSearchInput()" class="w-full bg-white border border-gray-200 focus:border-emerald-500 rounded-3xl px-8 py-5 text-lg outline-none shadow-sm">
+            <i class="fa-solid fa-magnifying-glass absolute right-7 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="mb-8">
+            <h2 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <span>Categories</span>
+                <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">POWERED BY DUMMYJSON API</span>
+            </h2>
+            <div id="category-pills" class="flex gap-3 overflow-x-auto pb-4"></div>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loading" class="hidden flex flex-col items-center justify-center py-20">
+            <i class="fa-solid fa-spinner fa-spin text-6xl text-emerald-500"></i>
+            <p class="mt-6 text-gray-500">Loading real apps...</p>
+        </div>
+
+        <!-- APPS GRID -->
+        <div id="apps-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+
+        <!-- NO RESULTS -->
+        <div id="no-results" class="hidden text-center py-20">
+            <i class="fa-solid fa-magnifying-glass text-6xl text-gray-300 mb-6"></i>
+            <h3 class="text-2xl font-semibold text-gray-400 mb-2">No results found</h3>
+            <p class="text-gray-500 mb-6">Try searching for WhatsApp, PUBG, or Instagram</p>
+            <button onclick="showAllApps()" 
+                    class="bg-emerald-500 text-white px-8 py-3 rounded-2xl font-medium hover:bg-emerald-600">
+                Show All Apps
+            </button>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-emerald-600 text-white px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-3 z-50">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        let allApps = [];
+        let currentCategory = 'All';
+
+        // ================== LOAD REAL API DATA ==================
+        async function loadApps() {
+            document.getElementById('loading').classList.remove('hidden');
+            try {
+                const res = await fetch('https://dummyjson.com/products?limit=30');
+                const data = await res.json();
+                
+                allApps = data.products.map(p => ({
+                    id: p.id,
+                    name: p.title,
+                    category: p.category.charAt(0).toUpperCase() + p.category.slice(1),
+                    icon: p.thumbnail,
+                    description: p.description.substring(0, 90) + "...",
+                    downloads: Math.floor(Math.random() * 8000 + 1000) + "K+",
+                    rating: p.rating.toFixed(1)
+                }));
+            } catch (e) {
+                // Fallback popular real apps
+                allApps = [
+                    {id:1,name:"Facebook",category:"Social",icon:"https://picsum.photos/id/101/200/200",description:"Connect with friends and family",downloads:"5B+",rating:"4.7"},
+                    {id:2,name:"WhatsApp",category:"Social",icon:"https://picsum.photos/id/201/200/200",description:"Simple, secure messaging",downloads:"10B+",rating:"4.8"},
+                    {id:3,name:"Instagram",category:"Social",icon:"https://picsum.photos/id/301/200/200",description:"Share photos and stories",downloads:"3B+",rating:"4.6"},
+                    {id:4,name:"PUBG Mobile",category:"Games",icon:"https://picsum.photos/id/401/200/200",description:"Battle Royale action",downloads:"1B+",rating:"4.5"},
+                    {id:5,name:"Spotify",category:"Music",icon:"https://picsum.photos/id/501/200/200",description:"Music for everyone",downloads:"500M+",rating:"4.9"}
+                ];
+            }
+            renderCategoryPills();
+            renderApps(allApps);
+        }
+
+        // ================== CLIENT-SIDE SEARCH (FAST & RELIABLE) ==================
+        function handleSearchInput() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            if (!query) {
+                const filtered = currentCategory === 'All' ? allApps : allApps.filter(a => a.category === currentCategory);
+                renderApps(filtered);
+                return;
+            }
+
+            const filtered = allApps.filter(app => 
+                (currentCategory === 'All' || app.category === currentCategory) &&
+                (app.name.toLowerCase().includes(query) || app.description.toLowerCase().includes(query))
+            );
+
+            renderApps(filtered);
+        }
+
+        function renderApps(appsToShow) {
+            document.getElementById('loading').classList.add('hidden');
+            const grid = document.getElementById('apps-grid');
+            const noResults = document.getElementById('no-results');
+            
+            grid.innerHTML = '';
+            
+            if (appsToShow.length === 0) {
+                grid.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            grid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+
+            appsToShow.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card bg-white rounded-3xl overflow-hidden border border-gray-100';
+                card.innerHTML = `
+                    <div class="p-5">
+                        <div class="flex gap-4">
+                            <img src="${app.icon}" class="w-16 h-16 rounded-2xl object-cover shadow-sm">
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg">${app.name}</h3>
+                                <p class="text-xs text-gray-500">${app.category}</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-5 line-clamp-3">${app.description}</p>
+                        <div class="flex justify-between mt-6 text-sm">
+                            <div>★ ${app.rating}</div>
+                            <div class="text-gray-500">${app.downloads}</div>
+                        </div>
+                        <button onclick="downloadApp('${app.name}')" 
+                                class="mt-5 w-full bg-emerald-500 text-white py-3.5 rounded-2xl font-semibold hover:bg-emerald-600">
+                            Download Free
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderCategoryPills() {
+            const cats = ['All', ...new Set(allApps.map(a => a.category))];
+            const container = document.getElementById('category-pills');
+            container.innerHTML = cats.map(cat => `
+                <button onclick="filterByCategory('${cat}')" 
+                        class="px-7 py-2.5 rounded-3xl text-sm font-medium transition-all ${cat === currentCategory ? 'bg-emerald-500 text-white' : 'bg-white hover:bg-gray-100 shadow-sm'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            renderCategoryPills();
+            const filtered = cat === 'All' ? allApps : allApps.filter(a => a.category === cat);
+            renderApps(filtered);
+        }
+
+        function showAllApps() {
+            document.getElementById('search-input').value = '';
+            currentCategory = 'All';
+            renderCategoryPills();
+            renderApps(allApps);
+        }
+
+        function downloadApp(name) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerHTML = `✅ Downloading ${name}... (Demo mode)`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // ================== START ==================
+        window.onload = () => {
+            loadApps();
+        };
+    </script>
+</body>
+</html>

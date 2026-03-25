@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVibe - Learn from the Best in Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="../assets/logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .course-card { transition: all 0.3s ease; }
+        .course-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-3xl">📚</div>
+                <h1 class="text-3xl font-bold tracking-tighter text-violet-700">EduVibe</h1>
+            </div>
+            <div class="flex items-center gap-8 text-sm font-medium">
+                <a href="#" class="hover:text-violet-600">Browse Courses</a>
+                <a href="#" class="hover:text-violet-600">Instructors</a>
+                <a href="#" class="hover:text-violet-600">My Learning</a>
+            </div>
+            <button onclick="showToast('Profile coming soon!')" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-3xl">
+                <i class="fa-solid fa-user"></i>
+                <span class="font-medium">Emmanuel</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <div class="relative h-[460px] bg-gradient-to-r from-violet-700 to-emerald-600 text-white overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://picsum.photos/id/1015/1920/1080')] bg-cover opacity-20"></div>
+        <div class="max-w-4xl mx-auto px-6 h-full flex items-center relative">
+            <div>
+                <h2 class="text-5xl font-bold tracking-tighter leading-tight">Learn from the Best<br>Teachers in Africa</h2>
+                <p class="mt-4 text-xl text-white/90">Over 2,500+ courses • Lifetime access • Certificates included</p>
+                <button onclick="document.getElementById('search-input').focus()" 
+                        class="mt-8 bg-white text-violet-700 hover:bg-gray-100 px-10 py-4 rounded-3xl font-semibold text-lg shadow-xl flex items-center gap-3">
+                    <i class="fa-solid fa-search"></i>
+                    Start Learning Today
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH & CATEGORIES -->
+    <div class="max-w-7xl mx-auto px-6 -mt-8 relative z-10">
+        <div class="bg-white rounded-3xl shadow-xl p-8">
+            <!-- Search -->
+            <div class="relative mb-8">
+                <input id="search-input" type="text" placeholder="Search courses (Web Development, Digital Marketing, Python...)" 
+                       onkeyup="handleSearch()" class="w-full bg-gray-100 border border-transparent focus:border-violet-500 rounded-3xl px-8 py-5 text-lg outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute right-8 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex gap-3 overflow-x-auto pb-4" id="category-pills"></div>
+        </div>
+    </div>
+
+    <!-- COURSES SECTION -->
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-semibold" id="section-title">All Courses</h2>
+            <button onclick="showAllCourses()" class="text-violet-600 hover:underline flex items-center gap-2">
+                <span>Show All</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div id="courses-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-violet-600 text-white px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-3 z-50">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        // ================== REAL COURSES DATA ==================
+        let allCourses = [
+            {id:1, title:"Complete Web Development Bootcamp", instructor:"Chinedu Okeke", category:"Programming", thumbnail:"https://picsum.photos/id/1015/400/300", rating:"4.9", students:"12.4k", price:"Free"},
+            {id:2, title:"Digital Marketing Mastery 2026", instructor:"Aisha Bello", category:"Marketing", thumbnail:"https://picsum.photos/id/201/400/300", rating:"4.8", students:"8.9k", price:"₦29,000"},
+            {id:3, title:"Python for Data Science & AI", instructor:"Oluwatosin Adebayo", category:"Programming", thumbnail:"https://picsum.photos/id/301/400/300", rating:"5.0", students:"15.2k", price:"Free"},
+            {id:4, title:"UI/UX Design Masterclass (Figma)", instructor:"Fatima Yusuf", category:"Design", thumbnail:"https://picsum.photos/id/401/400/300", rating:"4.7", students:"6.8k", price:"₦35,000"},
+            {id:5, title:"Afrobeats Music Production", instructor:"DJ Kaywise", category:"Music", thumbnail:"https://picsum.photos/id/501/400/300", rating:"4.9", students:"4.1k", price:"₦25,000"},
+            {id:6, title:"Business Strategy & Entrepreneurship", instructor:"Dr. Ngozi Okonjo", category:"Business", thumbnail:"https://picsum.photos/id/601/400/300", rating:"4.8", students:"9.3k", price:"Free"},
+            {id:7, title:"Graphic Design with Canva Pro", instructor:"Tunde Balogun", category:"Design", thumbnail:"https://picsum.photos/id/701/400/300", rating:"4.6", students:"11.7k", price:"Free"},
+            {id:8, title:"Mobile App Development (Flutter)", instructor:"Ibrahim Musa", category:"Programming", thumbnail:"https://picsum.photos/id/801/400/300", rating:"4.9", students:"7.5k", price:"₦45,000"},
+            {id:9, title:"Content Creation & YouTube Growth", instructor:"Chioma Eze", category:"Marketing", thumbnail:"https://picsum.photos/id/901/400/300", rating:"4.8", students:"5.9k", price:"Free"},
+            {id:10, title:"Cybersecurity for Beginners", instructor:"Emmanuel Adewale", category:"Programming", thumbnail:"https://picsum.photos/id/1005/400/300", rating:"4.7", students:"3.2k", price:"₦32,000"}
+        ];
+
+        let currentCategory = "All";
+
+        // ================== RENDER COURSES ==================
+        function renderCourses(courses) {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = '';
+
+            courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card bg-white rounded-3xl overflow-hidden shadow-md';
+                card.innerHTML = `
+                    <img src="${course.thumbnail}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <div class="text-xs font-medium text-violet-600 mb-1">${course.category}</div>
+                        <h3 class="font-semibold text-lg leading-tight line-clamp-2">${course.title}</h3>
+                        <p class="text-sm text-gray-500 mt-2">${course.instructor}</p>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <div class="flex items-center gap-1 text-amber-400">
+                                ★ <span class="text-gray-700 font-medium">${course.rating}</span>
+                            </div>
+                            <div class="text-xs text-gray-500">${course.students} students</div>
+                        </div>
+                        
+                        <div class="mt-6 flex items-center justify-between">
+                            <div class="text-xl font-bold ${course.price === 'Free' ? 'text-emerald-600' : 'text-violet-700'}">
+                                ${course.price}
+                            </div>
+                            <button onclick="enrollCourse('${course.title}')" 
+                                    class="bg-violet-600 hover:bg-violet-700 text-white px-7 py-3 rounded-2xl text-sm font-medium transition">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ================== CATEGORY PILLS ==================
+        function renderCategoryPills() {
+            const categories = ['All', ...new Set(allCourses.map(c => c.category))];
+            const container = document.getElementById('category-pills');
+            container.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat}')" 
+                        class="px-8 py-3 rounded-3xl text-sm font-medium transition-all whitespace-nowrap ${cat === currentCategory ? 'bg-violet-600 text-white shadow-md' : 'bg-white hover:bg-gray-100'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            renderCategoryPills();
+            
+            const filtered = cat === 'All' 
+                ? allCourses 
+                : allCourses.filter(c => c.category === cat);
+            
+            renderCourses(filtered);
+        }
+
+        // ================== LIVE SEARCH ==================
+        function handleSearch() {
+            const term = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            const filtered = allCourses.filter(course => 
+                (currentCategory === 'All' || course.category === currentCategory) &&
+                (course.title.toLowerCase().includes(term) || 
+                 course.instructor.toLowerCase().includes(term))
+            );
+            
+            renderCourses(filtered);
+        }
+
+        function showAllCourses() {
+            document.getElementById('search-input').value = '';
+            currentCategory = 'All';
+            renderCategoryPills();
+            renderCourses(allCourses);
+        }
+
+        // ================== ENROLL ACTION ==================
+        function enrollCourse(title) {
+            showToast(`🎉 Enrolled in <b>${title}</b>! Check "My Learning"`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerHTML = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 4000);
+        }
+
+        // ================== INIT ==================
+        window.onload = () => {
+            renderCategoryPills();
+            renderCourses(allCourses);
+            showToast("Welcome to EduVibe! 🎓");
+        };
+    </script>
+</body>
+</html>

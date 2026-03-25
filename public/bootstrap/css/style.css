@@ -1,0 +1,158 @@
+/* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color:rgba(37, 99, 235, 0.3)
+  rgba(96, 165, 250, 0.25)
+  rgba(234, 179, 8, 0.15)
+  rgba(241, 245, 249, 0.2)
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+*/
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 60px;
+}
+
+.nav-list li {
+  position: relative;
+}
+
+.nav-list a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 28px 0;
+  transition: color 0.3s ease;
+  z-index: 1000 !important;
+}
+
+.nav-list a:hover {
+  color: #0066ff;
+}
+
+/* === RENAMED DROPDOWN (no conflict with Bootstrap) === */
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(15px);
+  background: #F8FAFC;
+  min-width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 0;
+  z-index: 9999 !important;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  z-index: 1000 !important;
+}
+
+.nav-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ffffff;
+}
+
+.nav-dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 24px;
+  color: #444;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.nav-dropdown-menu a:hover {
+  background: #f8fbff;
+  color: #0066ff;
+  padding-left: 32px;
+}
+
+.nav-dropdown-menu i {
+  width: 24px;
+  font-size: 1.3rem;
+  color: #0066ff;
+}
+
+.nav-list a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(to right, #0066ff, #00b0ff);
+  transition: width 0.3s ease;
+}
+
+.nav-list a:hover::after {
+  width: 100%;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0066ff;
+}
+
+/* ====================== FORCE DROPDOWN ABOVE EVERYTHING ====================== */
+
+/* Navbar stays on top of the whole page */
+nav {
+  position: relative;
+  top:0;
+  z-index: 2000;           /* Higher than normal content */
+}
+
+/* The dropdown container */
+.nav-dropdown {
+  position: relative;
+  z-index: 2050;
+}
+
+/* The actual dropdown menu - super high z-index */
+.nav-dropdown-menu {
+  z-index: 9999 !important;
+}
+
+/* Lower the portfolio images so they can't cover the dropdown */
+.first-row,
+.img-dis,
+figure,
+.img {
+  position: relative;
+  z-index: 0;              /* Low number */
+}
